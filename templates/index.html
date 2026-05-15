@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard — Phishing Detection System</title>
+    <meta name="description" content="Advanced phishing detection and email security analysis platform. Analyze emails, URLs, and detect cyber threats in real-time.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span class="brand-text">Phish<span class="brand-accent">Guard</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+            <a href="#email-scan" class="nav-link" data-section="email-scan">Email Scan</a>
+            <a href="#url-scan" class="nav-link" data-section="url-scan">URL Scan</a>
+            <a href="#full-scan" class="nav-link" data-section="full-scan">Full Pipeline</a>
+        </div>
+        <div class="nav-status">
+            <div class="status-dot"></div>
+            <span>System Online</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="hero">
+                <div class="hero-badge">CYBERSECURITY PLATFORM</div>
+                <h1 class="hero-title">
+                    Advanced Phishing<br>
+                    <span class="gradient-text">Detection System</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Real-time email header analysis, IOC extraction, and website threat detection
+                    powered by DNS verification, WHOIS intelligence, and SSL inspection.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Email Analysis</span>
+                        <span class="stat-value">SPF · DKIM · DMARC</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-cyan">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">URL Scanning</span>
+                        <span class="stat-value">SSL · WHOIS · Forms</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">IOC Extraction</span>
+                        <span class="stat-value">URLs · IPs · Emails</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon stat-icon-green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Threat Scoring</span>
+                        <span class="stat-value">0–100 Risk Scale</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2 class="section-title">Quick Actions</h2>
+                <div class="action-cards">
+                    <button class="action-card" onclick="switchSection('email-scan')">
+                        <div class="action-icon">📧</div>
+                        <h3>Scan Email Headers</h3>
+                        <p>Upload a .eml file to analyze SPF, DKIM, DMARC authentication</p>
+                    </button>
+                    <button class="action-card" onclick="switchSection('url-scan')">
+                        <div class="action-icon">🌐</div>
+                        <h3>Scan Website URL</h3>
+                        <p>Check any URL for phishing indicators and SSL certificates</p>
+                    </button>
+                    <button class="action-card" onclick="switchSection('full-scan')">
+                        <div class="action-icon">🔬</div>
+                        <h3>Full Pipeline Scan</h3>
+                        <p>Complete analysis: headers + IOC extraction + website scan</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Email Scan Section -->
+        <section id="email-scan" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Email Header Analysis
+                </h2>
+                <p class="section-desc">Upload a .eml file to analyze email authentication protocols and detect spoofing</p>
+            </div>
+
+            <div class="upload-zone" id="email-upload-zone">
+                <div class="upload-content">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <h3>Drop your .eml file here</h3>
+                    <p>or click to browse</p>
+                    <input type="file" id="email-file-input" accept=".eml" hidden>
+                </div>
+                <div class="file-info" id="email-file-info" style="display:none">
+                    <span class="file-name" id="email-file-name"></span>
+                    <button class="btn-clear" onclick="clearFile('email')">✕</button>
+                </div>
+            </div>
+            <button class="btn-analyze" id="btn-email-analyze" onclick="analyzeEmail()" disabled>
+                <span class="btn-text">Analyze Email Headers</span>
+                <span class="btn-loader" style="display:none"></span>
+            </button>
+
+            <div id="email-results" class="results-container" style="display:none"></div>
+        </section>
+
+        <!-- URL Scan Section -->
+        <section id="url-scan" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Website URL Analysis
+                </h2>
+                <p class="section-desc">Enter a URL to analyze for phishing indicators, SSL certificates, and domain reputation</p>
+            </div>
+
+            <div class="url-input-group">
+                <div class="url-input-wrapper">
+                    <svg class="url-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    <input type="url" id="url-input" placeholder="https://example.com" autocomplete="off">
+                </div>
+                <button class="btn-analyze" id="btn-url-analyze" onclick="analyzeURL()">
+                    <span class="btn-text">Scan URL</span>
+                    <span class="btn-loader" style="display:none"></span>
+                </button>
+            </div>
+
+            <div id="url-results" class="results-container" style="display:none"></div>
+        </section>
+
+        <!-- Full Pipeline Section -->
+        <section id="full-scan" class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    Full Pipeline Analysis
+                </h2>
+                <p class="section-desc">Upload a .eml file for complete analysis: header authentication + IOC extraction + website scanning</p>
+            </div>
+
+            <div class="pipeline-steps">
+                <div class="pipeline-step">
+                    <div class="step-number">1</div>
+                    <span>Header Analysis</span>
+                </div>
+                <div class="pipeline-connector"></div>
+                <div class="pipeline-step">
+                    <div class="step-number">2</div>
+                    <span>IOC Extraction</span>
+                </div>
+                <div class="pipeline-connector"></div>
+                <div class="pipeline-step">
+                    <div class="step-number">3</div>
+                    <span>Website Scan</span>
+                </div>
+            </div>
+
+            <div class="upload-zone" id="full-upload-zone">
+                <div class="upload-content">
+                    <div class="upload-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <h3>Drop your .eml file here</h3>
+                    <p>or click to browse</p>
+                    <input type="file" id="full-file-input" accept=".eml" hidden>
+                </div>
+                <div class="file-info" id="full-file-info" style="display:none">
+                    <span class="file-name" id="full-file-name"></span>
+                    <button class="btn-clear" onclick="clearFile('full')">✕</button>
+                </div>
+            </div>
+            <button class="btn-analyze" id="btn-full-analyze" onclick="analyzeFull()" disabled>
+                <span class="btn-text">Run Full Pipeline</span>
+                <span class="btn-loader" style="display:none"></span>
+            </button>
+
+            <div id="full-results" class="results-container" style="display:none"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>PhishGuard — Phishing Detection System &copy; 2025 &middot; Defensive Use Only</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
