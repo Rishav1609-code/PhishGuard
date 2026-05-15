@@ -1,0 +1,243 @@
+# 📧 Phishing Detection System — Complete Instructions
+
+## 📋 Prerequisites
+
+- **Python 3.10+** installed on your system
+- **Internet connection** (required for DNS lookups, WHOIS queries, and website analysis)
+
+---
+
+## 🔧 Step 1: Setup (One-Time)
+
+Open a terminal (Command Prompt or PowerShell) and navigate to the project folder:
+
+```powershell
+cd C:\Users\rajvi\Downloads\phishing_detection_system
+```
+
+### Create a Virtual Environment (if not already created)
+
+```powershell
+python -m venv .venv
+```
+
+### Activate the Virtual Environment
+
+```powershell
+.venv\Scripts\activate
+```
+
+> [!TIP]
+> After activation, you should see `(.venv)` at the start of your terminal prompt.
+
+### Install Dependencies
+
+```powershell
+pip install -r requirements.txt
+```
+
+This installs: `beautifulsoup4`, `requests`, `tldextract`, `dnspython`, `python-whois`, `cryptography`, `lxml`
+
+---
+
+## 🚀 Step 2: Running the Program
+
+The program has **3 modes**:
+
+### Mode 1: `header` — Email Header Analysis
+
+Analyzes the headers of an `.eml` file for SPF/DKIM/DMARC authentication, domain alignment, and suspicious patterns.
+
+```powershell
+python main.py header <path_to_eml_file>
+```
+
+**Example:**
+```powershell
+# Analyze a suspicious phishing email
+python main.py header test_samples\suspicious_email.eml
+
+# Analyze a legitimate email
+python main.py header test_samples\legitimate_email.eml
+```
+
+**What it checks:**
+- ✅ SPF, DKIM, DMARC pass/fail status
+- ✅ DNS record verification (live lookups)
+- ✅ Domain alignment (From vs Return-Path vs DKIM signing domain)
+- ✅ Suspicious headers (mismatched Reply-To, PHPMailer, short Received chain)
+- ✅ Risk score (0–100) and verdict (LOW / MEDIUM / HIGH)
+
+---
+
+### Mode 2: `website` — Website/URL Analysis
+
+Analyzes a URL for phishing indicators like fake SSL, new domains, login forms, and typosquatting.
+
+```powershell
+python main.py website <url>
+```
+
+**Example:**
+```powershell
+# Analyze a legitimate website
+python main.py website https://www.google.com
+
+# Analyze PayPal (legitimate)
+python main.py website https://www.paypal.com
+
+# Analyze Netflix (legitimate)
+python main.py website https://www.netflix.com
+
+# Analyze a suspicious URL
+python main.py website https://g00gle-login.com
+```
+
+**What it checks:**
+- ✅ SSL/TLS certificate (issuer, validity, free CA detection)
+- ✅ Domain age via WHOIS (flags domains < 180 days old)
+- ✅ Login form detection (password fields, form action URLs)
+- ✅ URL shortener detection (bit.ly, tinyurl.com, etc.)
+- ✅ Typosquatting detection (Levenshtein distance from known brands)
+- ✅ External iframe analysis
+- ✅ Risk score (0–100) and verdict (LOW / MEDIUM / HIGH)
+
+---
+
+### Mode 3: `full` — Full Detection Pipeline
+
+Runs **all analyses combined** on an `.eml` file:
+1. Header analysis (SPF/DKIM/DMARC)
+2. IOC extraction (URLs, IPs, emails, obfuscated links)
+3. Website analysis on every extracted URL
+
+```powershell
+python main.py full <path_to_eml_file>
+```
+
+**Example:**
+```powershell
+python main.py full test_samples\suspicious_email.eml
+```
+
+**What it does:**
+- 🔍 **Phase 1** — Analyzes email headers → produces risk score
+- 🔍 **Phase 2** — Extracts all URLs, IPs, email addresses from the email body
+- 🔍 **Phase 3** — Runs website analysis on each extracted URL automatically
+
+---
+
+## 📂 Project Structure
+
+```
+phishing_detection_system/
+├── main.py                          # Entry point (run this)
+├── requirements.txt                 # Python dependencies
+├── config/
+│   └── settings.py                  # Thresholds, brand lists, keywords
+├── phase2_detection/
+│   ├── header_analyzer.py           # Email header analysis
+│   ├── ioc_extractor.py             # IOC extraction (URLs, IPs, emails)
+│   └── website_analyzer.py          # Website/URL phishing detection
+├── utils/
+│   └── dns_utils.py                 # DNS query helpers (SPF, DKIM, DMARC)
+└── test_samples/
+    ├── suspicious_email.eml         # Sample phishing email for testing
+    └── legitimate_email.eml         # Sample legitimate email for testing
+```
+
+---
+
+## 📊 Understanding the Output
+
+### Risk Score Scale
+
+| Score | Verdict | Meaning |
+|-------|---------|---------|
+| 0–30 | 🟢 **LOW** | Likely legitimate |
+| 31–60 | 🟡 **MEDIUM** | Some suspicious indicators, needs review |
+| 61–100 | 🔴 **HIGH** | Strong phishing indicators detected |
+
+### Sample Output — Phishing Email (Header Analysis)
+
+```
+========================================================================
+  EMAIL HEADER ANALYSIS REPORT
+========================================================================
+  Source File       : test_samples\suspicious_email.eml
+  From Domain       : paypa1-support.com
+  Envelope Domain   : paypa1-support.com
+  Reply-To Domain   : randomdomain.xyz
+  Received Hops     : 1
+
+  ── Authentication Results ──────────────────────────────────
+  [SPF]
+    Status          : fail
+    DNS Record Found: NO
+
+  [DKIM]
+    Status          : fail
+    DNS Record Found: NO
+
+  [DMARC]
+    Status          : fail
+    DNS Record Found: NO
+
+  ── Suspicious Header Flags ────────────────────────────────
+    ⚠  Reply-To domain differs from From domain
+    ⚠  X-Mailer contains suspicious keyword: 'phpmailer'
+    ⚠  Only 1 Received header — direct-to-MX delivery
+
+  ── Verdict ─────────────────────────────────────────────────
+    Risk Score : 100 / 100
+    Verdict    : HIGH
+========================================================================
+```
+
+---
+
+## 🧪 Testing with Your Own Emails
+
+### How to get `.eml` files
+
+1. **Gmail**: Open email → Three dots (⋮) → "Download message" → saves as `.eml`
+2. **Outlook**: Open email → File → Save As → choose `.eml` format
+3. **Thunderbird**: Right-click email → "Save As" → `.eml`
+
+Then run:
+```powershell
+python main.py full path\to\your\email.eml
+```
+
+---
+
+## ⚠️ Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `python` not recognized | Use `python3` instead, or add Python to PATH |
+| Module not found errors | Make sure venv is activated: `.venv\Scripts\activate` |
+| WHOIS timeout | Some domains block WHOIS; this is handled gracefully |
+| SSL connection errors | Normal for non-HTTPS sites; flagged as suspicious |
+| Unicode display issues | Already fixed in code — should work on all Windows terminals |
+
+---
+
+## 🔑 Quick Reference
+
+```powershell
+# Activate virtual environment
+.venv\Scripts\activate
+
+# Analyze email headers only
+python main.py header test_samples\suspicious_email.eml
+
+# Analyze a website URL
+python main.py website https://www.example.com
+
+# Run full pipeline on an email
+python main.py full test_samples\suspicious_email.eml
+
+# Show usage help
+python main.py
+```
